@@ -1,0 +1,7 @@
+Here is the current plan:
+{curr_plan}
+
+User feedback:
+{feedback}
+
+Update the plan accordingly.

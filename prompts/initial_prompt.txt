@@ -1,0 +1,3 @@
+The initial data gotten from sheets is:
+{initial_data}
+Create a structured event plan:
