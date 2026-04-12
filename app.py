@@ -57,10 +57,11 @@ def render_fetch_stage():
             st.session_state.curr_row_idx = processed_rows[st.session_state.current_queue_index]["row_index"]
 
     if st.session_state.get("num_rows", 0) == 0:
-        st.success("✅ No new rows to process.")
+        st.success("✅ No new rows to process. No planning is required! You can close this tool safely.")
         return
 
     st.success(f"✅ Found {st.session_state.num_rows} row(s) to process.")
+    st.info(f"Selected Row {st.session_state.curr_row_idx} to start planning")
     st.json(st.session_state.curr_row)
 
     if st.button("Validate Data"):
@@ -142,7 +143,7 @@ def render_process_stage():
                 updated_plan = ""
 
                 with st.status("Reading feedback...", expanded=True) as status:
-                    local_planner_llm = get_cached_planner_llm
+                    local_planner_llm = get_cached_planner_llm()
                     try:
                         for partial in local_planner_llm.refine_plan(
                                 plan=st.session_state.curr_plan,
@@ -204,13 +205,14 @@ def render_finish_stage():
                  "liked the services")
 
     if st.session_state.current_queue_index + 1 >= st.session_state.num_rows:
-        st.success("Planner complete and row marked as planned in Google Sheets. You can safely close this tool now!")
+        st.info("Planner complete and row marked as planned in Google Sheets.")
+        st.success("✅ All rows have been planned! You can safely close this tool now!")
         return
 
     next_iteration_button = st.button("Process Next Row")
     if next_iteration_button:
         st.session_state.current_queue_index += 1
-        st.session_state.stage = "validation"
+        st.session_state.stage = "validate"
         st.session_state.curr_row_idx = st.session_state.processed_rows[st.session_state.current_queue_index][
             "row_index"]
         st.session_state.curr_row = st.session_state.processed_rows[st.session_state.current_queue_index]["data"]
