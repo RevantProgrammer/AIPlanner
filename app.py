@@ -97,7 +97,7 @@ def render_process_stage():
             try:
                 local_planner_llm = get_cached_planner_llm()
             except Exception as e:
-                st.error(f"LLM connection failed, Error: {e}")
+                st.error(f"LLM connecftion failed, Error: {e}")
                 return
 
         placeholder = st.empty()
@@ -184,7 +184,16 @@ def render_process_stage():
 
 def render_implement_stage():
     st.title("5. Implementation Stage")
-    st.subheader("This is the phase where we would typically do implementation!")
+    print(st.session_state.curr_plan)
+    if not st.session_state.pdf_made_flag:
+        with st.spinner("Transforming the plan into a PDF..."):
+            try:
+                PLANNER_SERVICE.make_pdf(st.session_state.curr_plan)
+                st.session_state.pdf_made_flag = True
+            except Exception as e:
+                st.error(f"Failed to generate PDF, Error: {e}")
+                return
+    st.success("Plan saved into a PDF!")
     finish_button = st.button("Finish Pipeline")
     if finish_button:
         go_to_stage("finish")
@@ -206,7 +215,7 @@ def render_finish_stage():
 
     if st.session_state.current_queue_index + 1 >= st.session_state.num_rows:
         st.info("Planner complete and row marked as planned in Google Sheets.")
-        st.success("✅ All rows have been planned! You can safely close this tool now!")
+        st.success("✅ All rows that were checked at the start have been planned! You can safely close this tool now!")
         return
 
     next_iteration_button = st.button("Process Next Row")
@@ -217,6 +226,7 @@ def render_finish_stage():
             "row_index"]
         st.session_state.curr_row = st.session_state.processed_rows[st.session_state.current_queue_index]["data"]
         reset_plan_state()
+        st.session_state.pdf_made_flag = False
         st.session_state.FINISH_PIPELINE = False
         st.rerun()
 
@@ -237,6 +247,9 @@ def run_pipeline():
 def initialise_session_states():
     if "stage" not in st.session_state:
         st.session_state.stage = "initial"
+
+    if "pdf_made_flag" not in st.session_state:
+        st.session_state.pdf_made_flag = False
 
     if "current_queue_index" not in st.session_state:
         st.session_state.current_queue_index = 0

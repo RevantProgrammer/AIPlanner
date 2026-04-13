@@ -12,5 +12,6 @@ def get_settings():
         "SHEET_NAME": os.getenv("SHEET_NAME"),
         "CREDENTIALS_FILE": os.getenv("CREDENTIALS_FILE"),
         "GENERATE_PROMPT_FILE": os.getenv("GENERATE_PROMPT_FILE"),
-        "REFINE_PROMPT_FILE": os.getenv("REFINE_PROMPT_FILE")
+        "REFINE_PROMPT_FILE": os.getenv("REFINE_PROMPT_FILE"),
+        "STRUCTURE_PROMPT_FILE": os.getenv("STRUCTURE_PROMPT_FILE")
     }

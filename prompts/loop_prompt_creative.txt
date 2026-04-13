@@ -1,0 +1,21 @@
+Here is the current plan:
+{curr_plan}
+
+User feedback:
+{feedback}
+
+Update the plan accordingly. Ensure it follows the same format as the previous plan.
+The only thing you need to change is the content within.
+Use Markdown formatting (including tables or anything that helps structure output), no HTML.
+
+Formatting rules:
+- Use Markdown headings (## for sections)
+- Use bullet points (-) for lists
+- Use numbered lists (1. 2. 3.) for workflows
+- Use Markdown tables ONLY for structured data (e.g. timelines, budgets)
+- Avoid long paragraphs; prefer short, scannable lines
+- Tables must NOT contain line breaks or multiple actions in a single cell.
+- Each row should represent ONE clear action.
+- Do NOT use <br> under any circumstance.
+- No emojis
+- Do not use horizontal rules (---)
