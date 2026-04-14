@@ -2,6 +2,7 @@ from models.reader import Reader
 from models.plannerAI import PlannerLLM
 from models.validator_normaliser import ValidatorAndNormaliser
 from models.implementor import PDFMaker
+import json
 
 
 class PlannerApplicationService:
@@ -29,9 +30,10 @@ class PlannerApplicationService:
         structured_data = ""
         for partial_response in self.planner.structure_data(data):
             structured_data = partial_response
+        structured_data = json.loads(structured_data)
         print(structured_data)
-        pdf_maker = PDFMaker("output/output.pdf")
-        pdf_maker.build_pdf(structured_data)
+        pdf_maker = PDFMaker()
+        return pdf_maker.generate_pdf_content(structured_data)
 
     def fetch_unplanned_rows(self):
         local_reader = self.__get_sheet()

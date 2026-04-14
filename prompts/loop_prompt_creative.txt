@@ -4,18 +4,34 @@ Here is the current plan:
 User feedback:
 {feedback}
 
-Update the plan accordingly. Ensure it follows the same format as the previous plan.
-The only thing you need to change is the content within.
-Use Markdown formatting (including tables or anything that helps structure output), no HTML.
+Your task is to update the plan based ONLY on the feedback.
 
-Formatting rules:
+CORE RULES:
+- Preserve the exact section structure and ordering
+- Ensure updates remain consistent across all sections (e.g. timeline, channel strategy, and workflow should not contradict each other)
+- Do NOT add or remove sections
+- Do NOT change formatting style (tables, lists, headings)
+- Only modify content where the feedback requires it
+- If a section is not affected by the feedback, leave it unchanged
+
+EDITING RULES:
+- Make minimal necessary changes only
+- Do NOT rewrite the entire plan
+- Do NOT add new ideas unless explicitly requested in the feedback
+- Do NOT remove existing ideas unless explicitly requested
+- Keep all changes consistent with the original tone and intent
+
+FORMATTING RULES:
 - Use Markdown headings (## for sections)
 - Use bullet points (-) for lists
 - Use numbered lists (1. 2. 3.) for workflows
-- Use Markdown tables ONLY for structured data (e.g. timelines, budgets)
+- Use Markdown tables ONLY for structured data
+- Tables must NOT contain line breaks or multiple actions in a single cell
+- Each row must represent ONE clear action
 - Avoid long paragraphs; prefer short, scannable lines
-- Tables must NOT contain line breaks or multiple actions in a single cell.
-- Each row should represent ONE clear action.
-- Do NOT use <br> under any circumstance.
+- Do NOT use <br>
 - No emojis
 - Do not use horizontal rules (---)
+
+OUTPUT:
+Return the FULL updated plan with only the necessary changes applied.

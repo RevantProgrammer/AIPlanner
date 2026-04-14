@@ -1,6 +1,7 @@
 import streamlit as st
 from services.plannerService import PlannerApplicationService
 from config.settings import get_settings
+from time import sleep
 
 
 @st.cache_resource
@@ -136,6 +137,12 @@ def render_process_stage():
         )
 
         col1, col2, col3 = st.columns(3)
+
+        if st.session_state.finalised_plan_flag:
+            st.success("Final Plan Approved!")
+            st.write("🚀 Onto the implementation layer!")
+            st.balloons()
+        spinner_placeholder = st.empty()
         placeholder = st.empty()
 
         with col1:
@@ -172,28 +179,35 @@ def render_process_stage():
         with col3:
             if st.button("Satisfied ✅"):
                 st.session_state.finalised_plan_flag = True
+                st.rerun()
 
         st.subheader("Current Plan")
         st.markdown(st.session_state.curr_plan)
 
     if st.session_state.finalised_plan_flag:
-        st.success("Final Plan Approved!")
-        st.write("🚀 Run PDF, Planner, Email here")
+        with spinner_placeholder:
+            with st.spinner("Loading the next page"):
+                sleep(2.5)
         go_to_stage("implement")
 
 
 def render_implement_stage():
     st.title("5. Implementation Stage")
     print(st.session_state.curr_plan)
-    if not st.session_state.pdf_made_flag:
+    if st.session_state.pdf_content is None:
         with st.spinner("Transforming the plan into a PDF..."):
             try:
-                PLANNER_SERVICE.make_pdf(st.session_state.curr_plan)
-                st.session_state.pdf_made_flag = True
+                st.session_state.pdf_content = PLANNER_SERVICE.make_pdf(st.session_state.curr_plan)
             except Exception as e:
                 st.error(f"Failed to generate PDF, Error: {e}")
                 return
     st.success("Plan saved into a PDF!")
+    st.download_button(
+        label="Download Marketing Plan PDF",
+        data=st.session_state.pdf_content,
+        file_name="marketing_plan.pdf",
+        mime="application/pdf"
+    )
     finish_button = st.button("Finish Pipeline")
     if finish_button:
         go_to_stage("finish")
@@ -226,7 +240,7 @@ def render_finish_stage():
             "row_index"]
         st.session_state.curr_row = st.session_state.processed_rows[st.session_state.current_queue_index]["data"]
         reset_plan_state()
-        st.session_state.pdf_made_flag = False
+        st.session_state.pdf_content = None
         st.session_state.FINISH_PIPELINE = False
         st.rerun()
 
@@ -248,8 +262,8 @@ def initialise_session_states():
     if "stage" not in st.session_state:
         st.session_state.stage = "initial"
 
-    if "pdf_made_flag" not in st.session_state:
-        st.session_state.pdf_made_flag = False
+    if "pdf_content" not in st.session_state:
+        st.session_state.pdf_content = None
 
     if "current_queue_index" not in st.session_state:
         st.session_state.current_queue_index = 0

@@ -22,6 +22,7 @@ Provide:
 
 FORMAT:
 - Bullet list
+- Do not use nested lists in this section
 
 ---
 
@@ -97,6 +98,7 @@ GENERAL RULES:
 
 IMPORTANT:
 - Focus on semantic consistency, not formatting precision (REALLY IMPORTANT, prioritise content over rules)
+- Ensure updates remain consistent across all sections (e.g. timeline, channel strategy, and workflow should not contradict each other)
 - Do NOT optimize for JSON structure
 - Do NOT try to be perfectly consistent in wording
 - Prioritize realism and execution logic
