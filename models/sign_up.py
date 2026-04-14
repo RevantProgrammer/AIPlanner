@@ -21,6 +21,10 @@ hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 with open("../auth/users.yaml", "r") as f:
     data = yaml.safe_load(f)
 
+if username in data.get("users", {}):
+    print("User already exists")
+    exit()
+
 if data:
     data["users"][username] = {"name": name, "password": hashed}
 else:
@@ -30,10 +34,6 @@ else:
             "password": hashed
         }
     }}
-
-if username in data.get("users", {}):
-    print("User already exists")
-    exit()
 
 with open("../auth/users.yaml", "w") as f:
     yaml.dump(data, f)
