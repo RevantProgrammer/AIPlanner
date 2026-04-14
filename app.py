@@ -29,6 +29,12 @@ def reset_plan_state():
     st.session_state.history = []
     st.session_state.finalised_plan_flag = False
 
+def render_login_stage():
+    st.title("Login")
+    st.info("This is where you login")
+    if st.button("Login"):
+        go_to_stage("initial")
+
 
 def render_initial_stage():
     st.title("1. 📊 Event Planner AI")
@@ -247,6 +253,7 @@ def render_finish_stage():
 
 def run_pipeline():
     STAGES = {
+        "login": render_login_stage,
         "initial": render_initial_stage,
         "fetch_data": render_fetch_stage,
         "validate": render_validate_page,
@@ -260,7 +267,7 @@ def run_pipeline():
 
 def initialise_session_states():
     if "stage" not in st.session_state:
-        st.session_state.stage = "initial"
+        st.session_state.stage = "login"
 
     if "pdf_content" not in st.session_state:
         st.session_state.pdf_content = None

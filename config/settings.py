@@ -13,5 +13,6 @@ def get_settings():
         "CREDENTIALS_FILE": os.getenv("CREDENTIALS_FILE"),
         "GENERATE_PROMPT_FILE": os.getenv("GENERATE_PROMPT_FILE"),
         "REFINE_PROMPT_FILE": os.getenv("REFINE_PROMPT_FILE"),
-        "STRUCTURE_PROMPT_FILE": os.getenv("STRUCTURE_PROMPT_FILE")
+        "STRUCTURE_PROMPT_FILE": os.getenv("STRUCTURE_PROMPT_FILE"),
+        "LOGIN_USERS_FILE": os.getenv("LOGIN_USERS_FILE")
     }
