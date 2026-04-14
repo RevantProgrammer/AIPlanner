@@ -29,10 +29,26 @@ def reset_plan_state():
     st.session_state.history = []
     st.session_state.finalised_plan_flag = False
 
+
 def render_login_stage():
     st.title("Login")
-    st.info("This is where you login")
-    if st.button("Login"):
+    if not st.session_state.logged_in:
+        with st.form("login_form"):
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+            submit_button = st.form_submit_button("Login")
+
+            if submit_button:
+                name, res = PLANNER_SERVICE.is_login_valid(username, password)
+                if res:
+                    st.session_state.logged_in = True
+                    st.success("Logged in successfully!")
+                    st.toast(f"Welcome {name}")
+                    sleep(2)
+                    go_to_stage("initial")
+                else:
+                    st.error("Invalid username or password")
+    else:
         go_to_stage("initial")
 
 
@@ -241,14 +257,13 @@ def render_finish_stage():
     next_iteration_button = st.button("Process Next Row")
     if next_iteration_button:
         st.session_state.current_queue_index += 1
-        st.session_state.stage = "validate"
         st.session_state.curr_row_idx = st.session_state.processed_rows[st.session_state.current_queue_index][
             "row_index"]
         st.session_state.curr_row = st.session_state.processed_rows[st.session_state.current_queue_index]["data"]
         reset_plan_state()
         st.session_state.pdf_content = None
         st.session_state.FINISH_PIPELINE = False
-        st.rerun()
+        go_to_stage("validate")
 
 
 def run_pipeline():
@@ -268,6 +283,9 @@ def run_pipeline():
 def initialise_session_states():
     if "stage" not in st.session_state:
         st.session_state.stage = "login"
+
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
 
     if "pdf_content" not in st.session_state:
         st.session_state.pdf_content = None

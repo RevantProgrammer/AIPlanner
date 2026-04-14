@@ -2,6 +2,7 @@ from models.reader import Reader
 from models.plannerAI import PlannerLLM
 from models.validator_normaliser import ValidatorAndNormaliser
 from models.implementor import PDFMaker
+from models.authetication import Authenticator
 import json
 
 
@@ -51,3 +52,7 @@ class PlannerApplicationService:
     def mark_row_complete(self, row):
         local_reader = self.__get_sheet()
         local_reader.target_sheet.update_cell(row, local_reader.get_planned_column_index(), "TRUE")
+
+    def is_login_valid(self, user, passw):
+        auth = Authenticator(self.config['LOGIN_USERS_FILE'])
+        return auth.check_login(user, passw)
