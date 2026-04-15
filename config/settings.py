@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import json
 
 
-def get_settings():
+def get_settings() -> dict:
     load_dotenv()
     return {
         "OLLAMA_API_KEY": os.getenv("OLLAMA_API_KEY"),

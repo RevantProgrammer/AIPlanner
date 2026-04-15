@@ -10,27 +10,27 @@ def get_cached_planner_llm():
 
 
 @st.cache_data
-def get_cached_constants():
+def get_cached_constants() -> dict:
     return get_settings()
 
 
 @st.cache_resource
-def get_cached_planner_service():
+def get_cached_planner_service() -> PlannerApplicationService:
     return PlannerApplicationService(config=get_cached_constants())
 
 
-def go_to_stage(stage):
+def go_to_stage(stage: str) -> None:
     st.session_state.stage = stage
     st.rerun()
 
 
-def reset_plan_state():
+def reset_plan_state() -> None:
     st.session_state.curr_plan = None
     st.session_state.history = []
     st.session_state.finalised_plan_flag = False
 
 
-def render_login_stage():
+def render_login_stage() -> None:
     st.title("Login")
     if not st.session_state.logged_in:
         with st.form("login_form"):
@@ -52,7 +52,7 @@ def render_login_stage():
         go_to_stage("initial")
 
 
-def render_initial_stage():
+def render_initial_stage() -> None:
     st.title("1. 📊 Event Planner AI")
     st.write("Click the button below to process new form submissions.")
     executor_button = st.button("Run Planner")
@@ -60,7 +60,7 @@ def render_initial_stage():
         go_to_stage("fetch_data")
 
 
-def render_fetch_stage():
+def render_fetch_stage() -> None:
     st.title("2. Fetch Stage")
 
     if not st.session_state.fetch_done:
@@ -91,7 +91,7 @@ def render_fetch_stage():
         go_to_stage("validate")
 
 
-def render_validate_page():
+def render_validate_page() -> None:
     st.title("3. Validation and Normalisation Stage")
 
     with st.spinner("Validating and Normalising data..."):
@@ -109,7 +109,7 @@ def render_validate_page():
         go_to_stage("process")
 
 
-def render_process_stage():
+def render_process_stage() -> None:
     st.title("4. Plan Stage")
     st.subheader(f"Processing Row {st.session_state.curr_row_idx}")
 
@@ -213,7 +213,7 @@ def render_process_stage():
         go_to_stage("implement")
 
 
-def render_implement_stage():
+def render_implement_stage() -> None:
     st.title("5. Implementation Stage")
     print(st.session_state.curr_plan)
     if st.session_state.pdf_content is None:
@@ -235,7 +235,7 @@ def render_implement_stage():
         go_to_stage("finish")
 
 
-def render_finish_stage():
+def render_finish_stage() -> None:
     st.title("Task Complete!")
     if not st.session_state.FINISH_PIPELINE:
         with st.spinner("Marking row as planned in database..."):
@@ -266,7 +266,7 @@ def render_finish_stage():
         go_to_stage("validate")
 
 
-def run_pipeline():
+def run_pipeline() -> None:
     STAGES = {
         "login": render_login_stage,
         "initial": render_initial_stage,
@@ -280,7 +280,7 @@ def run_pipeline():
     STAGES[st.session_state.stage]()
 
 
-def initialise_session_states():
+def initialise_session_states() -> None:
     if "stage" not in st.session_state:
         st.session_state.stage = "login"
 

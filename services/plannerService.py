@@ -1,3 +1,4 @@
+from typing import Any
 from models.reader import Reader
 from models.plannerAI import PlannerLLM
 from models.validator_normaliser import ValidatorAndNormaliser
@@ -7,27 +8,27 @@ import json
 
 
 class PlannerApplicationService:
-    def __init__(self, config):
+    def __init__(self, config: dict[str, Any]) -> None:
         self.config = config
         self.planner = None
 
-    def __get_sheet(self):
+    def __get_sheet(self) -> Reader:
         local_reader = Reader(self.config['CREDENTIALS_FILE'], self.config['SCOPES'])
         local_reader.connect_to_sheet(self.config['WORKBOOK_ID'], self.config['SHEET_NAME'])
         return local_reader
 
     @staticmethod
-    def __load_prompt(file):
+    def __load_prompt(file: str) -> str:
         print(f"LOADING PROMPT: {file}")
         with open(file) as f:
             return f.read()
 
     @staticmethod
-    def validate(data):
+    def validate(data: str) -> str:
         validator = ValidatorAndNormaliser(data)
         return validator.validate_normalise()
 
-    def make_pdf(self, data):
+    def make_pdf(self, data: str) -> bytes:
         structured_data = ""
         for partial_response in self.planner.structure_data(data):
             structured_data = partial_response
@@ -36,12 +37,12 @@ class PlannerApplicationService:
         pdf_maker = PDFMaker()
         return pdf_maker.generate_pdf_content(structured_data)
 
-    def fetch_unplanned_rows(self):
+    def fetch_unplanned_rows(self) -> tuple[int, list[dict]]:
         local_reader = self.__get_sheet()
         row_results = local_reader.get_unplanned_rows()
         return row_results
 
-    def get_planner(self):
+    def get_planner(self) -> PlannerLLM:
         generate_prompt = self.__load_prompt(self.config['GENERATE_PROMPT_FILE'])
         refine_prompt = self.__load_prompt(self.config['REFINE_PROMPT_FILE'])
         structure_prompt = self.__load_prompt(self.config['STRUCTURE_PROMPT_FILE'])
@@ -49,10 +50,10 @@ class PlannerApplicationService:
         # return PlannerLLM(generate_prompt, refine_prompt, structure_prompt, self.config['OLLAMA_API_KEY'])
         return self.planner
 
-    def mark_row_complete(self, row):
+    def mark_row_complete(self, row: int) -> None:
         local_reader = self.__get_sheet()
         local_reader.target_sheet.update_cell(row, local_reader.get_planned_column_index(), "TRUE")
 
-    def is_login_valid(self, user, passw):
+    def is_login_valid(self, user: str|None, passw: str|None) -> tuple[str, bool]:
         auth = Authenticator(self.config['LOGIN_USERS_FILE'])
         return auth.check_login(user, passw)
