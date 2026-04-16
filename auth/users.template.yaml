@@ -1,4 +1,0 @@
-users:
-  example-username:
-    name: name-of-party-with-username
-    password: hashed-saved-password

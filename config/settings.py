@@ -50,6 +50,23 @@ def _get_google_credentials() -> dict:
     raise ValueError("No Google credentials found")
 
 
+def _get_users() -> dict:
+    # 1. Streamlit secrets
+    try:
+        val = st.secrets["AUTHORISATION"].get("USERS")
+        if val is not None and val != "":
+            return val
+    except Exception:
+        pass
+
+    # 2. Env (local / cloud)
+    env_users = os.getenv("USERS")
+    if env_users:
+        return json.loads(env_users)
+
+    raise ValueError("No users configuration found")
+
+
 def get_settings() -> dict:
     return {
         "OLLAMA_API_KEY": _get_secret("OLLAMA_API_KEY", section="API_KEYS"),
@@ -60,5 +77,5 @@ def get_settings() -> dict:
         "GENERATE_PROMPT_FILE": _get_secret("GENERATE_PROMPT_FILE", section="PROMPTS"),
         "REFINE_PROMPT_FILE": _get_secret("REFINE_PROMPT_FILE", section="PROMPTS"),
         "STRUCTURE_PROMPT_FILE": _get_secret("STRUCTURE_PROMPT_FILE", section="PROMPTS"),
-        "USER_DATA": _get_secret("USERS", "AUTHORISATION"),
+        "USER_DATA": _get_users(),
     }
