@@ -1,3 +1,8 @@
+# SERVICE LAYER
+# This class is the ONLY orchestration layer between UI and core logic.
+# UI (Streamlit) should NEVER call models or APIs directly.
+# All business logic flows through here to allow future migration to API-based architecture.
+
 from typing import Any
 from models.reader import Reader
 from models.plannerAI import PlannerLLM

@@ -1,3 +1,7 @@
+# NOTE: This PDF generator is tightly coupled to current plan JSON schema.
+# If JSON structure changes, this must be updated accordingly.
+
+
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.lib import colors

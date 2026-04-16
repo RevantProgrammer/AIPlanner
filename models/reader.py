@@ -1,3 +1,11 @@
+# CURRENT IMPLEMENTATION: Google Sheets via gspread
+# FUTURE MIGRATION: Replace this entire layer with SQL repository pattern (PostgreSQL recommended)
+# Do NOT build business logic on top of this abstraction — only raw data access
+
+# TODO (Phase 1 Scaling): Replace with SQL query:
+# get_unplanned_rows() → SELECT * FROM plans WHERE status = 'unplanned'
+
+
 import gspread
 from google.oauth2.service_account import Credentials
 

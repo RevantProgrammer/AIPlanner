@@ -1,3 +1,10 @@
+# Streamlit can become problematic for handling multiple pages
+# It is fine however, for an initial MVP and after an extent of scaling
+
+# Ensure to decouple this UI Layer as much as possible with Logic
+# This makes transition to another UI less painful down the road
+
+
 import streamlit as st
 from services.plannerService import PlannerApplicationService
 from config.settings import get_settings
@@ -30,6 +37,7 @@ def reset_plan_state() -> None:
     st.session_state.finalised_plan_flag = False
 
 
+# PIPELINE STAGE 1: Users are forced to log-in order to access the application
 def render_login_stage() -> None:
     st.title("Login")
     if not st.session_state.logged_in:
@@ -52,6 +60,7 @@ def render_login_stage() -> None:
         go_to_stage("initial")
 
 
+# PIPELINE STAGE 2: The intial page which marks the beginning of the planner
 def render_initial_stage() -> None:
     st.title("1. 📊 Event Planner AI")
     st.write("Click the button below to process new form submissions.")
@@ -60,6 +69,7 @@ def render_initial_stage() -> None:
         go_to_stage("fetch_data")
 
 
+# PIPELINE STAGE 3: Raw data extraction from source (Google Sheets)
 def render_fetch_stage() -> None:
     st.title("2. Fetch Stage")
 
@@ -91,6 +101,7 @@ def render_fetch_stage() -> None:
         go_to_stage("validate")
 
 
+# PIPELINE STAGE 4: Data validation + normalisation
 def render_validate_page() -> None:
     st.title("3. Validation and Normalisation Stage")
 
@@ -109,11 +120,12 @@ def render_validate_page() -> None:
         go_to_stage("process")
 
 
+# PIPELINE STAGE 3: LLM plan generation and refining
 def render_process_stage() -> None:
     st.title("4. Plan Stage")
     st.subheader(f"Processing Row {st.session_state.curr_row_idx}")
 
-    # FEEDBACK LOOP
+    # INITIAL PLAN GENERATION
 
     if st.session_state.curr_plan is None:
         with st.spinner("Connecting to LLM..."):
@@ -141,6 +153,8 @@ def render_process_stage() -> None:
         st.session_state.curr_plan = response
         st.session_state.history = []
         st.rerun()
+
+    # FEEDBACK LOOP
 
     if st.session_state.curr_plan:
         if st.session_state.history:
@@ -206,6 +220,8 @@ def render_process_stage() -> None:
         st.subheader("Current Plan")
         st.markdown(st.session_state.curr_plan)
 
+    # PLAN APPROVED FLAG
+
     if st.session_state.finalised_plan_flag:
         with spinner_placeholder:
             with st.spinner("Loading the next page"):
@@ -213,6 +229,7 @@ def render_process_stage() -> None:
         go_to_stage("implement")
 
 
+# PIPELINE STAGE 5: Structured JSON conversion and PDF Generation
 def render_implement_stage() -> None:
     st.title("5. Implementation Stage")
     print(st.session_state.curr_plan)
@@ -235,6 +252,7 @@ def render_implement_stage() -> None:
         go_to_stage("finish")
 
 
+# PIPELINE STAGE 7: Persistence (mark as "Planned") and checks for remaining rows
 def render_finish_stage() -> None:
     st.title("Task Complete!")
     if not st.session_state.FINISH_PIPELINE:

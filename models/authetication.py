@@ -1,5 +1,12 @@
+# CURRENT: Static auth via secrets / env
+# FUTURE: Replace with Microsoft OAuth or Google Workspace SSO
+# Do not extend this system beyond MVP use cases
+
+# SECURITY NOTE: This is NOT production-grade authentication.
+# Intended only for internal MVP access control.
+
+
 import bcrypt
-import yaml
 
 
 class Authenticator:

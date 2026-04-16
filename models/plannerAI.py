@@ -1,3 +1,12 @@
+# CURRENT: Single LLM (Ollama Cloud)
+# FUTURE: Replace with AI Router that selects domain-specific expert models:
+# - marketing_planner
+# - finance_planner
+# - operations_planner
+
+# WARNING: Prompt is tightly coupled to current marketing MVP use case.
+# This will need abstraction when adding multi-domain planning support.
+
 from typing import Any, Generator
 from ollama import Client
 
@@ -9,6 +18,9 @@ class PlannerLLM:
         self.refine_prompt = refine_prompt
         self.structure_prompt = structure_prompt
 
+        # EXTENSION POINT:
+        # Must change this code depending on the LLM you are using.
+        # The methods later on must also be changed accordingly
         self.client = Client(
             host='https://ollama.com',
             headers={'Authorization': f"Bearer {api_key}"}
