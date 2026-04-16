@@ -1,8 +1,9 @@
-.env
 __pycache__/
 *.pyc
-credentials/credentials.json
 .idea/
 .vscode/
 *.iml
+.env
+credentials/credentials.json
 auth/users.yaml
+.streamlit/secrets.toml

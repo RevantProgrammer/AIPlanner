@@ -13,7 +13,7 @@ class PlannerApplicationService:
         self.planner = None
 
     def __get_sheet(self) -> Reader:
-        local_reader = Reader(self.config['CREDENTIALS_FILE'], self.config['SCOPES'])
+        local_reader = Reader(self.config['GOOGLE_CREDENTIALS'], self.config['SCOPES'])
         local_reader.connect_to_sheet(self.config['WORKBOOK_ID'], self.config['SHEET_NAME'])
         return local_reader
 

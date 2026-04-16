@@ -3,10 +3,10 @@ from google.oauth2.service_account import Credentials
 
 
 class Reader:
-    def __init__(self, cred_file: str, scopes:list=None) -> None:
+    def __init__(self, cred_info: str, scopes:list=None) -> None:
         self.scopes = scopes or ["https://www.googleapis.com/auth/spreadsheets"]
-        self.creds = Credentials.from_service_account_file(
-            cred_file, scopes=self.scopes
+        self.creds = Credentials.from_service_account_info(
+            cred_info, scopes=self.scopes
         )
         self.target_sheet = None
         self.planned_col_index = None
