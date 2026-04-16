@@ -55,5 +55,5 @@ class PlannerApplicationService:
         local_reader.target_sheet.update_cell(row, local_reader.get_planned_column_index(), "TRUE")
 
     def is_login_valid(self, user: str|None, passw: str|None) -> tuple[str, bool]:
-        auth = Authenticator(self.config['LOGIN_USERS_FILE'])
+        auth = Authenticator(self.config['USER_DATA'])
         return auth.check_login(user, passw)

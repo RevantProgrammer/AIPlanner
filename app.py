@@ -9,7 +9,7 @@ def get_cached_planner_llm():
     return PLANNER_SERVICE.get_planner()
 
 
-@st.cache_data
+@st.cache_resource
 def get_cached_constants() -> dict:
     return get_settings()
 

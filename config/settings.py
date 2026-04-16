@@ -5,6 +5,8 @@ import json
 import streamlit as st
 
 load_dotenv()
+
+
 def _get_secret(key: str, section=None, default=None) -> Any:
     # Streamlit Cloud
     try:
@@ -24,6 +26,7 @@ def _get_secret(key: str, section=None, default=None) -> Any:
         return val
 
     return default
+
 
 def _get_google_credentials() -> dict:
     # Streamlit Cloud
@@ -46,6 +49,7 @@ def _get_google_credentials() -> dict:
 
     raise ValueError("No Google credentials found")
 
+
 def get_settings() -> dict:
     return {
         "OLLAMA_API_KEY": _get_secret("OLLAMA_API_KEY", section="API_KEYS"),
@@ -56,5 +60,5 @@ def get_settings() -> dict:
         "GENERATE_PROMPT_FILE": _get_secret("GENERATE_PROMPT_FILE", section="PROMPTS"),
         "REFINE_PROMPT_FILE": _get_secret("REFINE_PROMPT_FILE", section="PROMPTS"),
         "STRUCTURE_PROMPT_FILE": _get_secret("STRUCTURE_PROMPT_FILE", section="PROMPTS"),
-        "LOGIN_USERS_FILE": _get_secret("LOGIN_USERS_FILE", section="AUTHORISATION"),
+        "USER_DATA": _get_secret("USERS", "AUTHORISATION"),
     }
